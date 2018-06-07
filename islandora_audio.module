@@ -76,9 +76,9 @@ function islandora_audio_islandora_sp_audioCModel_islandora_view_object($object,
 }
 
 /**
- * Implements hook_islandora_xml_form_builder_forms().
+ * Implements hook_xml_form_builder_forms().
  */
-function islandora_audio_islandora_xml_form_builder_forms() {
+function islandora_audio_xml_form_builder_forms() {
   $module_path = drupal_get_path('module', 'islandora_audio');
   return array(
     'Audio MODS form' => array(
@@ -88,9 +88,9 @@ function islandora_audio_islandora_xml_form_builder_forms() {
 }
 
 /**
- * Implements hook_islandora_xml_form_builder_form_associations().
+ * Implements hook_xml_form_builder_form_associations().
  */
-function islandora_audio_islandora_xml_form_builder_form_associations() {
+function islandora_audio_xml_form_builder_form_associations() {
   return array(
     'islandora_audio_mods_form' => array(
       'content_model' => 'islandora:sp-audioCModel',
@@ -117,9 +117,9 @@ function islandora_audio_theme($existing, $type, $theme, $path) {
 }
 
 /**
- * Implements template_preprocess_hook().
+ * Implements template_preprocess_HOOK().
  */
-function islandora_audio_preprocess_islandora_audio(array &$variables) {
+function template_preprocess_islandora_audio(array &$variables) {
   drupal_add_js('misc/form.js');
   drupal_add_js('misc/collapse.js');
   $islandora_object = $variables['islandora_object'];
@@ -238,4 +238,15 @@ function islandora_audio_islandora_sp_audiocmodel_islandora_derivative() {
     );
   }
   return $derivative_list;
+}
+
+/**
+ * Implements hook_file_mimetype_mapping_alter().
+ */
+function islandora_audio_file_mimetype_mapping_alter(&$mapping) {
+  // Make sure the mapping is sensible for audio/mpeg by removing
+  // it from array and adding it to end so it has priority.
+  $code = $mapping['extensions']['mp3'];
+  unset($mapping['extensions']['mp3']);
+  $mapping['extensions']['mp3'] = $code;
 }
